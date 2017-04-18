@@ -1,0 +1,73 @@
+@startuml
+
+
+class Konto {
+    - saldo
+    + getSaldo()
+    - setSaldo()
+
+    + udtræk()
+    + indsæt()
+
+    + validerUdtræk(beløb)
+    + validerIndsæt(beløb)
+}
+
+class BudgetKonto{
+    - kreditMax
+    + getKreditMax()
+    + setKreditMax()
+
+    + udtræk()
+}
+Konto <|-- BudgetKonto
+
+class PrioritetsKonto #eeeeee {
+    - pant
+}
+Konto <|-- PrioritetsKonto
+
+Object KontantKonto
+KontantKonto .up.|> Konto
+
+abstract class TellerMachine {
+    + udførTransaktion()
+    - kontantKonto
+}
+TellerMachine *-up-> KontantKonto
+
+class NetBank {
+    - kontantKonto = null
+}
+TellerMachine <|-- NetBank
+
+class ATM {
+    - kontantBeholdning
+}
+TellerMachine <|-- ATM
+
+Konto "2" <..o Transaktion
+
+class Transaktion {
+ - TellerMachine Teller
+ - Konto
+ - ModtagerKonto
+ + validerTransaktion()
+}
+
+class KontantTransaktion {
+    - ModtagerKonto = KontantKonto
+}
+KontantTransaktion -up-|> Transaktion
+
+Transaktion o..> TellerMachine
+
+KontantTransaktion o..> ATM
+
+class Log {
+    Transaktioner[]
+    + logTransaktion(Transaktion, TellerMachine, Konto)
+}
+Transaktion <.down.o "Transaktioner[]" Log
+
+@enduml

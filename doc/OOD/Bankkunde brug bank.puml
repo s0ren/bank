@@ -1,0 +1,38 @@
+@startuml
+
+left to right direction
+
+Bankkunde <<human>>
+TellerMachine <<abstract machine>> as TM
+
+usecase (overfør penge) as overfør
+Bankkunde --> (overfør)
+(overfør) <-- TM
+
+PengeAutomat <<ATM>> as ATM
+TM <|- ATM
+
+usecase (hæv pænge) as haev
+Bankkunde  --> (haev)
+(haev) <-- ATM
+
+usecase (indsæt pænge) as indsaet
+Bankkunde --> (indsaet)
+(indsaet) <-- ATM
+
+NetBank <<web app>>
+TM <|-- NetBank
+
+usecase (betal regning) as betal #ffffff
+Bankkunde --> (betal)
+(betal) <--- NetBank
+
+usecase (bed om penge) as bed #dddddd
+Bankkunde --> (bed)
+(bed) <-- TM
+
+usecase (opkræv regning) as opkræv #dddddd
+Bankkunde --> (opkræv)
+(opkræv) <--- NetBank
+
+@enduml
