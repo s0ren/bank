@@ -1,1 +1,16 @@
+Se console viduet
+
 <script src="js.js"></script>
+
+<script>
+
+    var bankbog = Konto(1, 200, 'Bent', 0.015);
+
+    var teller = TellerMachine();
+
+    teller.udfoerTransaktion(bankbog, kontantKonto, 50);
+    teller.udfoerTransaktion(bankbog, kontantKonto, 200);
+
+    console.log(bankbog.saldo);
+
+</script>
