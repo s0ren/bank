@@ -29,12 +29,25 @@ var Konto = function(id, saldo, ejer, rentefod)
 		
 		Object.defineProperty
 		(
+			that, "id",
+			{
+				"get":function()
+				{
+					return(id)
+				},
+				enumerable: true
+			}
+		)
+		
+		Object.defineProperty
+		(
 			that, "saldo", 
 			{
 				"get": function()
 				{
 					return(saldo)
-				}
+				},
+				enumerable: true
 //				"set": function(tilId, belob)
 //				{
 //					if(typeof(TilId) == "number" && typeof(belob) == "number")
@@ -50,16 +63,7 @@ var Konto = function(id, saldo, ejer, rentefod)
 //				}
 			}
 		);
-		Object.defineProperty
-		(
-			that, "id",
-			{
-				"get":function()
-				{
-					return(id)
-				}
-			}
-		)
+		
 		
 		that.udtraek = function(belob)
 		{
@@ -111,11 +115,11 @@ var Transaktion = function(fraKonto, tilKonto, belob, teller)
 		
 		that.udfor = function()
 		{
-			if(that.valider() == true && erBrugt == false)
+			if(that.valider() == true)
 			{
 				fraKonto.udtraek(belob)
 				tilKonto.indsaet(belob)
-				Transaktioner.add({"fra": fraKonto.id, "til": tilKonto.id, "belob": belob, "teller": teller})
+				Transaktioner.add({"fra": JSON.stringify(fraKonto), "til": JSON.stringify(tilKonto), "belob": belob, "teller": teller})
 				erBrugt = true
 				return("overførslen gik igemmen")
 			}
@@ -123,7 +127,7 @@ var Transaktion = function(fraKonto, tilKonto, belob, teller)
 		}
 		that.valider = function()
 		{
-			if(fraKonto.validerUdtraek(belob) == true && tilKonto.validerIndaet(belob) == true)
+			if(fraKonto.validerUdtraek(belob) == true && tilKonto.validerIndaet(belob) == true && erBrugt == false)
 			{
 				return(true)
 			}
@@ -133,3 +137,21 @@ var Transaktion = function(fraKonto, tilKonto, belob, teller)
 	}
 	else{throw("Fejl ved fra konten, til konten, beløbet eller telleren")}
 }
+
+var TellerMachine = function()
+{
+	var that = {}
+	
+	that.udfor = function(fraKonto, tilKonto, belob)
+	{
+		var o = Transaktion(fraKonto, tilKonto, belob, that)
+		return(o.udfor())
+	}
+	return(that)
+} 
+
+
+
+hej = Konto(0000, 1000, "Jhon", 0.02);
+hej2 = Konto(0001, 100, "Hansen", 0.04);
+teller = TellerMachine();
